@@ -57,7 +57,7 @@ class JobForm(forms.Form):
 class SearchForm(forms.Form):
     # 1: user 2: Year 3: Degree 4:Company 5:Job 6:Loc
     search_item = forms.ChoiceField(choices = [('-',''),('USER','User'),('YEAR','Graduation Year'),('DEGREE','Degree'),\
-                                               ('COMPANY', 'Company'), ('JOB', 'Job'),('LOC','Physical Location')], label="Search")
+                                               ('COMPANY', 'Company'), ('LOC','Physical Location')], label="Search")
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -114,33 +114,7 @@ class EditEventsForm(forms.Form):
     city = forms.CharField(max_length=50)
     country = forms.CharField(max_length=50)
 
-'''def create(request):    #creating new user
-    form = UserForm()
-    if request.method == "POST":
-		# then they are sending data, create a new user
-        form = UserForm(request.POST)
-        if form.is_valid():
-            #database = MySQLdb.connect (host="localhost", user = "alumni", passwd = "redtablefan", db = "alumni")
-            cursor = connection.cursor()
-            #count = cursor.fetchall()
-            username = cursor.execute('SELECT COUNT(*) FROM auth_user') +1
-            new_user = User.objects.create_user(username=username, name =request.POST['first_name'], \
-                        surname = request.POST['last_name'], password= request.POST['password'],email= request.POST['eamil'])
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            #send email
-            email = EmailMessage('Hello', 'World', to=[ request.POST['email']])
-            email.send()
-            return render(request, "../templates/alumni/toProfile.html", {'userid' : new_user.id, 'username' : \
-                new_user.first_name})
-        #send email
-    else:
-        # they are requesting the page, give
-        form = UserForm()
-        return render(request, '../templates/alumni/create.html', {'form': form})
-'''
+
 
 def normalize_query(query_string,
                     findterms=re.compile(r'"([^"]+)"|(\S+)').findall,
@@ -225,10 +199,10 @@ def search(request):  #searching function
         #if request.GET['search_item'] == '4': # note this is a company from Job object - i.e. a piece of someone's work history not a 'jobadvert'
             matches = models.Job.objects.filter(Q(company_name__icontains=searchText) | Q(job_desc__icontains=searchText) | Q(job_title__icontains=searchText))
             found = make_paginator(request, matches, 20)
-        if request.GET['search_item'] == "JOB":
+        ''' if request.GET['search_item'] == "JOB":
         #if request.GET['search_item'] == '5':
             matches = models.Advert.objects.filter(Q(city__icontains=searchText) | Q(country__icontains=searchText) | Q(title__icontains=searchText) | Q(description__icontains=searchText) | Q(reference__icontains=searchText))
-            found = make_paginator(request, matches, 20)
+            found = make_paginator(request, matches, 20)'''
     if found:
         return render_to_response('../templates/alumni/search.html',
                           { 'query_string': query_string, 'found_entries': found, 'search' : search },
